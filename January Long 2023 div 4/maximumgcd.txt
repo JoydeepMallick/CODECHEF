@@ -1,0 +1,298 @@
+Solution
+PROBLEM LINK:
+
+Practice
+Contest: Division 1
+Contest: Division 2
+Contest: Division 3
+Contest: Division 4
+
+Author: nicholask
+Testers: iceknight1093, tabr
+Editorialist: iceknight1093
+DIFFICULTY:
+
+TBD
+PREREQUISITES:
+
+Computing all subarray GCDs
+PROBLEM:
+
+You are given an array AA. For each KK from 11 to NN, compute the maximum GCD of a subarray of length KK.
+EXPLANATION:
+
+There are O(N2)O(N2) subarrays, and while going through them all is impossible, it’s actually possible to compute all their GCDs in a compressed form.
+
+The main observation that allows this to happen is the fact that there are only O(Nlog⁡max⁡A)O(NlogmaxA) distinct subarray GCDs.
+Proof
+
+For convenience, let f(i,j)=gcd⁡(Ai,Ai+1,…,Aj)f(i,j)=gcd(Ai​,Ai+1​,…,Aj​).
+
+Let’s fix an index RR (1≤R≤N1≤R≤N), and look at all subarrays of the form [i,R][i,R] for 1≤i≤R1≤i≤R.
+
+Suppose you knew f(i,R)f(i,R). What’s its relation with f(i−1,R)f(i−1,R)?
+We know that f(i−1,R)=gcd⁡(f(i,R),Ai−1)f(i−1,R)=gcd(f(i,R),Ai−1​).
+In particular, f(i−1,R)f(i−1,R) will always be a divisor of f(i,R)f(i,R).
+
+So, we either have f(i−1,R)=f(i,R)f(i−1,R)=f(i,R) (which doesn’t increase the number of distinct GCDs), or f(i−1,R)f(i−1,R) is a strictly smaller factor of f(i,R)f(i,R), in which case f(i−1,R)≤f(i,R)/2f(i−1,R)≤f(i,R)/2.
+This halving can only happen log⁡ARlogAR​ times before the GCD reaches 11 and never changes again.
+
+So, there are log⁡ARlogAR​ distinct values of f(i,R)f(i,R).
+Summing this across all RR gives us an upper bound of Nlog⁡max⁡ANlogmaxA distinct subarray GCDs.
+
+Computing them all isn’t too hard; in fact, the proof above gives us a pretty reasonable way to compute them all quickly.
+How?
+
+The method is also described in short in point 33 of this blog post, with code.
+
+At any rate, now that we know all subarray GCDs, the problem is almost solved.
+
+Let ansiansi​ be the answer for the subarrays of length ii.
+Then, using what we computed earlier:
+
+    Let LL be the length of the longest subarray ending at ii with GCD gg.
+    Then, set ansL=max⁡(ansL,g)ansL​=max(ansL​,g).
+
+Finally, set ansi=max⁡(ansi,ansi+1,…,ansN)ansi​=max(ansi​,ansi+1​,…,ansN​); which can be done in O(N)O(N) by taking suffix maximums of the ansans array.
+
+As an aside, we make O(Nlog⁡max⁡A)O(NlogmaxA) GCD calls, each of which is technically O(log⁡max⁡A)O(logmaxA) itself.
+This gives us an upper bound of O(Nlog⁡2(max⁡A))O(Nlog2(maxA)) for the time complexity.
+However, it’s likely a bit faster in practice as mentioned here and here; the analysis is a bit harder but I wouldn’t be surprised if it’s O(Nlog⁡max⁡A+log⁡max⁡A)O(NlogmaxA+logmaxA).
+TIME COMPLEXITY:
+
+O(Nlog⁡2(max⁡A))O(Nlog2(maxA)) per testcase, likely faster in practice.
+CODE:
+Setter's code (C++)
+
+#include <bits/stdc++.h>
+using namespace std;
+int gcd(int a,int b){
+	while (b) b^=a^=b^=a%=b;
+	return a;
+}
+void solve(){
+	int n;
+	cin>>n;
+	int a[n+1];
+	for (int i=1; i<=n; i++) cin>>a[i];
+	int ans[n+1];
+	for (int i=1; i<=n; i++) ans[i]=0;
+	vector <pair <int,int> > f;
+	for (int i=1; i<=n; i++){
+		for (pair <int,int>&j: f) j.first=gcd(j.first,a[i]);
+		f.push_back(make_pair(a[i],i));
+		vector <pair <int,int> > cur;
+		for (pair <int,int> j: f){
+			if (cur.empty()||cur.back().first!=j.first) cur.push_back(j);
+		}
+		f.swap(cur);
+		for (pair <int,int> j: f) ans[i-j.second+1]=max(ans[i-j.second+1],j.first);
+	}
+	for (int i=n-1; i>0; i--) ans[i]=max(ans[i],ans[i+1]);
+	for (int i=1; i<=n; i++) cout<<ans[i]<<" \n"[i==n];
+}
+int main(){
+	ios_base::sync_with_stdio(0); cin.tie(0);
+	int t;
+	cin>>t;
+	while (t--) solve();
+}
+
+Tester's code (C++)
+
+// not WA, sry
+#include <bits/stdc++.h>
+using namespace std;
+#ifdef tabr
+#include "library/debug.cpp"
+#else
+#define debug(...)
+#endif
+
+struct input_checker {
+    string buffer;
+    int pos;
+
+    const string all = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const string number = "0123456789";
+    const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const string lower = "abcdefghijklmnopqrstuvwxyz";
+
+    input_checker() {
+        pos = 0;
+        while (true) {
+            int c = cin.get();
+            if (c == -1) {
+                break;
+            }
+            buffer.push_back((char) c);
+        }
+    }
+
+    int nextDelimiter() {
+        int now = pos;
+        while (now < (int) buffer.size() && buffer[now] != ' ' && buffer[now] != '\n') {
+            now++;
+        }
+        return now;
+    }
+
+    string readOne() {
+        assert(pos < (int) buffer.size());
+        int nxt = nextDelimiter();
+        string res;
+        while (pos < nxt) {
+            res += buffer[pos];
+            pos++;
+        }
+        return res;
+    }
+
+    string readString(int minl, int maxl, const string& pattern = "") {
+        assert(minl <= maxl);
+        string res = readOne();
+        assert(minl <= (int) res.size());
+        assert((int) res.size() <= maxl);
+        for (int i = 0; i < (int) res.size(); i++) {
+            assert(pattern.empty() || pattern.find(res[i]) != string::npos);
+        }
+        return res;
+    }
+
+    int readInt(int minv, int maxv) {
+        assert(minv <= maxv);
+        int res = stoi(readOne());
+        assert(minv <= res);
+        assert(res <= maxv);
+        return res;
+    }
+
+    long long readLong(long long minv, long long maxv) {
+        assert(minv <= maxv);
+        long long res = stoll(readOne());
+        assert(minv <= res);
+        assert(res <= maxv);
+        return res;
+    }
+
+    void readSpace() {
+        assert((int) buffer.size() > pos);
+        assert(buffer[pos] == ' ');
+        pos++;
+    }
+
+    void readEoln() {
+        assert((int) buffer.size() > pos);
+        assert(buffer[pos] == '\n');
+        pos++;
+    }
+
+    void readEof() {
+        assert((int) buffer.size() == pos);
+    }
+};
+
+struct sparse {
+    using T = int;
+    int n;
+    int h;
+    vector<vector<T>> table;
+
+    T op(T x, T y) {
+        return __gcd(x, y);
+    }
+
+    sparse(const vector<T>& v) {
+        n = (int) v.size();
+        h = 32 - __builtin_clz(n);
+        table.resize(h);
+        table[0] = v;
+        for (int j = 1; j < h; j++) {
+            table[j].resize(n - (1 << j) + 1);
+            for (int i = 0; i <= n - (1 << j); i++) {
+                table[j][i] = op(table[j - 1][i], table[j - 1][i + (1 << (j - 1))]);
+            }
+        }
+    }
+
+    T get(int l, int r) {
+        assert(0 <= l && l < r && r <= n);
+        int k = 31 - __builtin_clz(r - l);
+        return op(table[k][l], table[k][r - (1 << k)]);
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    input_checker in;
+    int tt = in.readInt(1, 1e4);
+    in.readEoln();
+    int sn = 0;
+    while (tt--) {
+        int n = in.readInt(1, 1e5);
+        sn += n;
+        in.readEoln();
+        vector<int> a(n);
+        for (int i = 0; i < n; i++) {
+            a[i] = in.readInt(1, 1e9);
+            (i == n - 1 ? in.readEoln() : in.readSpace());
+        }
+        sparse sp(a);
+        vector<int> ans(n);
+        for (int i = 0; i < n; i++) {
+            function<void(int, int, int, int)> Check = [&](int low, int high, int lv, int hv) {
+                if (low + 1 >= high) {
+                    return;
+                }
+                if (lv == hv) {
+                    return;
+                }
+                if (ans[high - i] > lv) {
+                    return;
+                }
+                int mid = (high + low) >> 1;
+                int mv = sp.get(i, mid + 1);
+                ans[mid - i] = max(ans[mid - i], mv);
+                Check(low, mid, lv, mv);
+                Check(mid, high, mv, hv);
+            };
+            ans[0] = max(ans[0], a[i]);
+            ans[n - 1 - i] = max(ans[n - 1 - i], sp.get(i, n));
+            Check(i, n - 1, a[i], sp.get(i, n));
+        }
+        for (int i = 0; i < n; i++) {
+            cout << ans[i] << " \n"[i == n - 1];
+        }
+    }
+    assert(sn <= 2e5);
+    in.readEof();
+    cerr << sn << endl;
+    return 0;
+}
+
+Editorialist's code (Python)
+
+import sys
+input = sys.stdin.readline
+from math import gcd
+
+for _ in range(int(input())):
+	n = int(input())
+	a = list(map(int, input().split()))
+	ans = [0]*(n+1)
+	gcds = {}
+	sm = 0
+	for x in a:
+		new_gcds = {x:1}
+		for g in gcds.keys():
+			G = gcd(x, g)
+			if G not in new_gcds: new_gcds[G] = gcds[g]+1
+			else: new_gcds[G] = max(new_gcds[G], gcds[g]+1)
+		gcds = new_gcds
+		for g in gcds.keys():
+			ans[gcds[g]] = max(ans[gcds[g]], g)
+	for i in reversed(range(1, n)):
+		ans[i] = max(ans[i], ans[i+1])
+	print(*ans[1:])
+
