@@ -130,26 +130,33 @@ const ld PI = 3.141592653589793238462;
 void test(){
   string s;
   cin >> s;
-  ll ans = LONG_MAX;
-  unordered_map<char, vll> frsplit;
-  ll cnt = 1;
-  fori(1, s.size()){
-    if(s[i] == s[i-1]){
-      cnt++;
-    }
-    else{
-      frsplit[s[i-1]].pb(cnt);
-      cnt=1;
-    }
+  int ans = INT_MAX;
+  //store freq of characters
+  int fr[26] = {0};
+  for(char c : s){
+    fr[c-'a']++;
+  }
 
-    if(i== s.size()-1) frsplit[s[i]].pb(cnt);
+  fori(0,26){
+    if(fr[i] == 0) continue;
+    int winsize = fr[i];
+    char c = i + 'a';
+    //create a window of size
+    int cntc = 0; // no of elements c found in window
+    forj(0, winsize){
+      cntc += (s[j] == c);
+    }
+    //meaning winsize - cntc elements are to be replaced for this window since window size will remain same but position might change
+    ans = min(ans, winsize - cntc);
+    //perform sliding window for rest section
+    forj(winsize, s.size()){
+      int startind = j - winsize + 1;
+      cntc -= (s[startind-1] == c);
+      cntc += (s[j] == c);
+      ans = min(ans, winsize - cntc);
+    }
   }
-  for(auto it : frsplit){
-    dbg(it.first, it.second);
-    ll minforit = 0;
-    minforit = accumulate(all(it.second), minforit) - MAX(it.second);
-    ans = min(ans, minforit);
-  }
+
   cout << ans << endl;
 }
 
