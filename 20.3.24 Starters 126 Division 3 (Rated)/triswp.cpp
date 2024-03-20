@@ -204,26 +204,18 @@ void test() {
   string s;
   cin >> s;
 
-  ll ans = 0;
+  ll ans = n - 2;
   // xxyx format to be found
-  if (n == 3) {
-    if (s[0] == s[0 + 1] && s[0] == s[0 + 2]) {
-      ans = 0;
-    } else
-      ans = 1;
-  } else {
-    fori(0, n - 2) {
-      if (i == n - 3) {
-        if (s[i] == s[i + 1] && s[i] == s[i + 2])
-          continue;
-        ans++;
-      } else {
-        if (s[i] == s[i + 1] && s[i] == s[i + 2])
-          continue;
-        if (s[i] == s[i + 1] && s[i] == s[i + 3])
-          continue;
-        ans++;
-      }
+  fori(0, n - 2) {
+    if (i == n - 3) {
+      if (s[i] == s[i + 1] && s[i] == s[i + 2])
+        ans--;
+      continue;
+    } else {
+      if (s[i] == s[i + 1] && s[i] == s[i + 2])
+        ans--;
+      else if (s[i] == s[i + 1] && s[i] == s[i + 3])
+        ans--;
     }
   }
   cout << ans << endl;
