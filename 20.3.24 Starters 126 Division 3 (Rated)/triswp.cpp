@@ -205,20 +205,19 @@ void test() {
   cin >> s;
 
   ll ans = n - 2;
-  // xxyx format to be found
+  // xxyx format to be found then no change
+  // if xxy,xyx, yxx, xyz then rotation always provide unique otherwise
+  // if xxx then no change, hence all such occurences will result in same string
+  // and contribute just 1
+  bool threesame = false;
   fori(0, n - 2) {
-    if (i == n - 3) {
-      if (s[i] == s[i + 1] && s[i] == s[i + 2])
-        ans--;
-      continue;
-    } else {
-      if (s[i] == s[i + 1] && s[i] == s[i + 2])
-        ans--;
-      else if (s[i] == s[i + 1] && s[i] == s[i + 3])
-        ans--;
-    }
+    if (s[i] == s[i + 1] && s[i] == s[i + 2]) {
+      ans--;
+      threesame = true;
+    } else if (i < n - 3 && s[i] == s[i + 1] && s[i] == s[i + 3])
+      ans--;
   }
-  cout << ans << endl;
+  cout << ans + threesame << endl;
 }
 
 int main() {
