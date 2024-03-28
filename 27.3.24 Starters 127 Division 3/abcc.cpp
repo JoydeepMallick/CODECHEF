@@ -203,37 +203,35 @@ void test() {
   cin >> n;
   string a, b;
   cin >> a >> b;
-  map<char, vector<int>> ind;
+  map<char, vector<pair<int, int>>> ind; // store to swap indices of a
+  ll bcntillnow = 0;
   fori(0, n) {
     if (b[i] == 'b') {
       if (a[i] != 'b') {
         no;
         return;
       }
-      ind['b'].pb(i);
+      bcntillnow++;
     } else if (b[i] != a[i]) {
-      ind[a[i]].pb(i);
+      ind[a[i]].pb({i, bcntillnow});
     }
   }
-  if (ind['a'].size() != ind['b'].size()) {
+
+  if (ind['a'].size() != ind['c'].size()) {
     no;
     return;
   }
 
   int sz = ind['a'].size();
-
-  if (sz == 0) {
-    yes;
-    return;
+  fori(0, sz) {
+    if (ind['a'][i].first > ind['c'][i].first ||
+        ind['a'][i].second == ind['c'][i].second) {
+      no;
+      return;
+    }
   }
 
-  if (ind['a'][sz - 1] < ind['b'][ind['b'].size() - 1] &&
-      ind['c'][0] > ind['b'][0]) {
-    yes;
-    return;
-
-  } else
-    no;
+  yes;
 }
 
 int main() {
