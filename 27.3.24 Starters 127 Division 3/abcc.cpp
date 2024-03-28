@@ -213,6 +213,10 @@ void test() {
       }
       bcntillnow++;
     } else if (b[i] != a[i]) {
+      if (a[i] == 'b') { // if b[i] is not b then a[i] can never have b
+        no;
+        return;
+      }
       ind[a[i]].pb({i, bcntillnow});
     }
   }

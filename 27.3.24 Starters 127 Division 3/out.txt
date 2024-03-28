@@ -6,4 +6,6 @@ _____ TEST CASE #3 _____
 NO
 _____ TEST CASE #4 _____
 YES
-0.0518ms
+_____ TEST CASE #5 _____
+NO
+0.0536ms
