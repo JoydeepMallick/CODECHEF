@@ -202,8 +202,10 @@ void test() {
   ll x;
   cin >> x;
 
-  // a|b = a&b + a^b
-  cout << x << " " << x << endl;
+  // a|b = a&b + a^b -- not needed just observation
+  // Note that x .2 ^ k + x  and x will always have xor equal x.2^k and and as x
+  // both divisible by x
+  cout << x << " " << (x << 32) + x << endl;
 }
 
 int main() {

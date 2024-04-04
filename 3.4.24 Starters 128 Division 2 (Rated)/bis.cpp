@@ -201,73 +201,26 @@ const ld PI = 3.141592653589793238462;
 void test() {
   ll n;
   cin >> n;
-  vll a(n);
-  read(a);
-  /*
-    ll toadd = 0, ind = -1;
+  string s;
+  cin >> s;
+  // indexes (0 and 1), (2,3), ... form pairs always and can be swapped around ,
+  // very important observation.
+  //.... 10   0000000 01 1111111 10 .......
+  ll c00 = 0, c11 = 0, c01 = 0, c10 = 0;
+  for (ll i = 0; i < n; i += 2) {
+    string sub = s.substr(i, 2);
+    if (sub == "00")
+      c00++;
+    else if (sub == "11")
+      c11++;
+    else if (sub == "01")
+      c01++;
+    else
+      c10++;
+  }
 
-    fori(1, n) {
-      // dbg(a, ind, (i & 1) == (ind & 1));
-      if (a[i] >= a[i - 1]) {
-        continue;
-      } else {
-        if (ind == -1) {
-          ll dleft = a[i - 1] - a[i];
-          ll dright = 0;
-          if (i < n - 1) { // assume right side is greater vlue if not skipped
-    as
-                           // we pick max
-            dright = a[i + 1] - a[i];
-          }
-          toadd = max(dleft, dright);
-          ind = i;
-          a[i] += toadd;
-        }
-        if (i > (ind + 1)) { /// not subsequent
-          a[i] += toadd;
-          ind = i;
-        }
-        if (a[i] < a[i - 1]) {
-          no;
-          return;
-        }
-      }
-    }
-    yes;
-    */
-  vll ind;
-  ll cur = a[0];
-  fori(1, n) {
-    if (cur <= a[i]) {
-      cur = a[i];
-      continue;
-    }
-
-    ind.pb(i);
-    if (ind.size() > 1) {
-      if (ind[ind.size() - 1] - ind[ind.size() - 2] == 1) {
-        no;
-        return;
-      }
-    }
-  }
-  if (ind.size() == 0) {
-    yes;
-    return;
-  }
-  dbg(ind);
-  vll dleft, dright;
-  for (int i : ind) {
-    dleft.pb(a[i - 1] - a[i]);
-    if (i < n - 1) {
-      dright.pb(a[i + 1] - a[i]);
-    } else
-      dright.pb(LONG_MAX);
-  }
-  if (MAX(dleft) <= MIN(dright))
-    yes;
-  else
-    no;
+  ll ans = 2ll * (c00 + c11) + 2 * min(1ll, c01) + min(2ll, c10);
+  cout << ans << endl;
 }
 
 int main() {
