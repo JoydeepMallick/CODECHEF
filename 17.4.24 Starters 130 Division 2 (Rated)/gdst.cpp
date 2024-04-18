@@ -204,20 +204,6 @@ const ll INF = 1e18;
 const ld PI = 3.141592653589793238462;
 /*________ ADDITIONAL FUNCTION DEFINATIONS NEEDED FOR CURRENT CODE ________*/
 
-ll opcnt(string &s, string &r) {
-  // 2 times flip means back to normal
-  bool flipped = false;
-  ll cnt = 0;
-  fori(0, s.size()) {
-    bool res = (s[i] != r[i]); // res true and not flipped || flipped and res
-                               // false then only increment cnt
-    if (res != flipped) {
-      flipped = !flipped;
-      cnt++;
-    }
-  }
-  return cnt;
-}
 /*_________________________________WRITE YOUR CODE FOR EACH TEST CASE
  * BELOW____________________________________*/
 
@@ -226,18 +212,37 @@ void test() {
   cin >> n;
   string s;
   cin >> s;
-  // 2 possibilities either 10101010... or 0101010.......
 
-  char cur01 = '0', cur10 = '1';
-  string zeroone = "", onezero = "";
-  fori(0, n) {
-    zeroone += cur01;
-    onezero += cur10;
-    cur01 = (cur01 == '0' ? '1' : '0');
-    cur10 = (cur10 == '0' ? '1' : '0');
+  vll ans; // 1 based indexing
+  // we always considers pairs of adjacent 2 elements which must be equal
+  // i.e. 1st element = 2nd element, 3rd element = 4th element, .... so on
+  // hence -1 never exists if n is even.
+  // for each pair which elements which are not equal but need to be equal we
+  // need to choice 1 among both such that the previous chosen if any and next
+  // choosen if any must be different from current element chosen.
+  //
+
+  vll ind; // o based
+  for (ll i = 0; i < n; i += 2) {
+    if (s[i] != s[i + 1])
+      ind.pb(i);
+  }
+  // we can either take first element of subsequence from ind as 0 or 1 and then
+  // continue from there so on. I have taken first element from index to be 1
+  ll need = 1;
+  for (auto i : ind) {
+    ll ithele = s[i] - '0';
+    if (ithele == need) {
+      ans.pb(i + 1); // 1 based indexing
+    } else {
+      ans.pb(i + 2); // 1 based indexing considering next element which is
+                     // guaranteed to be equal to need
+    }
+    need ^= 1;
   }
 
-  cout << min(opcnt(s, zeroone), opcnt(s, onezero)) << endl;
+  cout << ans.size() << endl;
+  print(ans);
 }
 
 int main() {

@@ -5,9 +5,9 @@ _____ TEST CASE #2 _____
 _____ TEST CASE #3 _____
 1
 _____ TEST CASE #4 _____
-3
+7
 _____ TEST CASE #5 _____
-3
+7
 _____ TEST CASE #6 _____
-3
-12.2654ms
+4
+0.0464ms

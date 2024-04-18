@@ -204,20 +204,6 @@ const ll INF = 1e18;
 const ld PI = 3.141592653589793238462;
 /*________ ADDITIONAL FUNCTION DEFINATIONS NEEDED FOR CURRENT CODE ________*/
 
-ll opcnt(string &s, string &r) {
-  // 2 times flip means back to normal
-  bool flipped = false;
-  ll cnt = 0;
-  fori(0, s.size()) {
-    bool res = (s[i] != r[i]); // res true and not flipped || flipped and res
-                               // false then only increment cnt
-    if (res != flipped) {
-      flipped = !flipped;
-      cnt++;
-    }
-  }
-  return cnt;
-}
 /*_________________________________WRITE YOUR CODE FOR EACH TEST CASE
  * BELOW____________________________________*/
 
@@ -226,18 +212,32 @@ void test() {
   cin >> n;
   string s;
   cin >> s;
-  // 2 possibilities either 10101010... or 0101010.......
 
-  char cur01 = '0', cur10 = '1';
-  string zeroone = "", onezero = "";
-  fori(0, n) {
-    zeroone += cur01;
-    onezero += cur10;
-    cur01 = (cur01 == '0' ? '1' : '0');
-    cur10 = (cur10 == '0' ? '1' : '0');
-  }
-
-  cout << min(opcnt(s, zeroone), opcnt(s, onezero)) << endl;
+  // n is even hence even number of odd length and even length sets of same
+  // elements in continuity. i.e. 111 00 1111 0  has 4 sets (111), (00), (1111),
+  // (0)
+  //      parity of length of sets   Odd    Even  Even   Odd
+  //
+  //      Now we focus on arrangements of parities possible.
+  //      1. when 2 odds together -  111 00000   ----> 110 00000    or 111 10000
+  //      (just 1 change) [NOTE : depending on which index was selected the
+  //      cahnge will vary in subsequent and previous indices]
+  //
+  //      2. When 1 or more evens together with no odds guarding them - 11 0000
+  //      (no operation)
+  //
+  //      3. When 1 or more evens exist between 2 odd sets - 111 00 11 0000 1
+  //                               possible operation 1 :-   110 01 10 0001 1 (4
+  //                               operations) possible operation 2 :-   111 10
+  //                               01 1000 0 (4 operations) i.e. either leave
+  //                               first or last odd set untouched
+  //
+  // a mixed example :-  00 111 00 1111 0 111 0
+  //                     E   O  E   E   O O   O
+  //
+  // Approach 1 :-       00 110 01 1110 0 111 1 (since in O E E O case last
+  // changed was 1 so in O O case we need to change a 0 somewhere ) Approach 2
+  // :-       00 111 10 0111 1 110 0
 }
 
 int main() {
