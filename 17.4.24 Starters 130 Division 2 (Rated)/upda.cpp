@@ -214,34 +214,39 @@ void test() {
   vll a(n);
   read(a);
 
-  // conseqcuitve negative
-  vll cons;
-  bool gap = false;
-  fori(0, n - 1) {
-    if (a[i] <= 0 && a[i + 1] <= 0) {
-      if (cons.size() == 0 || gap == true) {
-        cons.pb(a[i] + a[i + 1]);
-        gap = false;
-      } else {
-        cons[cons.size() - 1] += a[i];
-      }
-    } else {
-      gap = true;
-    }
+  // conseqcuitve negative sum to be considered in alice step i.e. need to
+  // minimum sum subarray bob can do nothing expect from stopping alice cause
+  // further damage hence add all.
+  //
+  // min array sum with kadane algorithm OR
+  // pref sum and Mi means max val of pref till i
+  // Now to handle min subarray size = 2 we just main safe distance from Mi
+  // Pi - Mi-2 ensures that in worst case if Mi became maximum at i hence if Pi
+  // - Mi no elements were considered in subarray
+  //                         else if Mi became max at prev index then only 1
+  //                         element is selected it signifies only if i-2 we can
+  //                         be safe. i.e. 2 or more elements at minimum were
+  //                         selected
+  //
+
+  vll pref(n + 1, 0), mx(n + 1, 0);
+  ll maxtillnow = LONG_MIN;
+  fori(1, n + 1) {
+    pref[i] = pref[i - 1] + a[i - 1];
+    maxtillnow = max(
+        0ll,
+        max(maxtillnow,
+            pref[i])); // we are concerned with max  so avoid negative values
+                       // i.e. not take any elemnt in consideration. this
+                       // happens when all elements in array are negative
+    mx[i] = maxtillnow;
   }
-  if (n >= 2 && a[n - 1] <= 0 && a[n - 2] <= 0) {
-    cons[cons.size() - 1] += a[n - 1];
-  }
-  dbg(cons);
+  dbg(pref, mx);
 
-  ll mn = (cons.size() == 0 ? 0 : MIN(cons));
+  ll minsubsum = 0;
+  fori(2, n + 1) { minsubsum = min(minsubsum, pref[i] - mx[i - 2]); }
 
-  ll ans = 0;
-  ans = accumulate(all(a), ans);
-
-  ans = ans - mn + abs(mn);
-  if (cons.size() == 0)
-    ans = abs(ans);
+  ll ans = pref[n] - 2 * minsubsum;
 
   cout << ans << endl;
 }
