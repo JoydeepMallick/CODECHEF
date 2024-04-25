@@ -5,6 +5,7 @@
 */
 
 #include "bits/stdc++.h"
+#include <algorithm>
 #pragma GCC optimize("O3,unroll-loops")
 // #pragma GCC target("bmi,bmi2,lzcnt,popcnt")
 // #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt") //intel pentium processors
@@ -213,26 +214,14 @@ void test() {
   vll a(n), b(n);
   read(a);
 
-  vll lv(n), hv(n);
-
-  ll mx = MAX(a);
-
   fori(0, n) {
-    double val = (mx - a[i]) / (k * 1.0);
-    ll l = floorl(val) * k + a[i], h = ceill(val) * k + a[i];
-    lv[i] = l;
-    hv[i] = h;
-    if (abs(mx - h) <= abs(mx - l)) {
-      b[i] = h;
-    } else {
-      b[i] = l;
-    }
-    if (l > mx)
-      mx = h;
+    b[i] = a[i] % k; // how much we add this subtle difference will remain
   }
 
-  dbg(b, hv, lv);
-  cout << MAX(b) - MIN(b) << endl;
+  ll ans = MAX(b) - MIN(b);
+  sort(all(b));
+  fori(1, n) { ans = min(ans, b[i - 1] + k - b[i]); }
+  cout << ans << endl;
 }
 
 int main() {
