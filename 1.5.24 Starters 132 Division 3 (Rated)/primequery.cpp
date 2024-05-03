@@ -231,6 +231,37 @@ void test() {
     dbg(noof1s, noof2s, eletochange);
     ll mx = max(noof2s, noof1s);
     ll mn = min(noof2s, noof1s);
+
+    ll tochange = min(k, min(mx - mn, eletochange));
+    k -= tochange;
+    mn += tochange; // converted needed non 1 and 2 elements to 1 or 2 whichever
+                    // had lesser freq
+
+    if (mx < mn) {
+      swap(mx, mn);
+    }
+    eletochange -= tochange;
+    tochange = min(k, eletochange);
+
+    if (tochange) {
+      mx += tochange / 2;
+      mn += tochange / 2;
+      if (tochange % 2) {
+        mx = mx + 1;
+      }
+    }
+
+    if (mx < mn) {
+      swap(mx, mn);
+    }
+    if (mx - mn > 1 && k > 0) {
+      tochange = min((mx - mn) / 2, k);
+      mx += tochange;
+      mn -= tochange;
+    }
+
+    /* brute way can be simplified
+
     while (k > 0 && eletochange > 0) {
       if (mn < mx) {
         mn++;
@@ -240,6 +271,17 @@ void test() {
       k--;
       eletochange--;
     }
+    if (mx - mn > 1) {
+      // lets change some 1s to 2 and vice versa depending on majority since we
+      // are focused on findiing max pairs hence number of 1 s and number of 2
+      // much have least difference as much as possible
+      while (k > 0 && mx - mn > 1) {
+        mx--;
+        mn++;
+        k--;
+      }
+    }
+    */
     cout << mx * mn << endl;
   }
 }

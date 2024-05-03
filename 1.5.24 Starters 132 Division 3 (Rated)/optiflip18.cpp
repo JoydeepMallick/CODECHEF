@@ -213,17 +213,31 @@ void test() {
   vll a(n);
   read(a);
 
-  ll evencnt = 0, ans = 0;
+  vll conseq1scnt;
+  ll cnt = 0;
   fori(0, n) {
-    if (a[i] % 2 == 0) {
-      ans += (n - evencnt);
-      evencnt++;
+    if (a[i] % 2)
+      cnt++;
+    else {
+      conseq1scnt.pb(cnt);
+      cnt = 0;
     }
   }
-  if (evencnt < n) {
-    ans += (n - evencnt);
-    evencnt++;
+  if (cnt)
+    conseq1scnt.pb(cnt);
+
+  // all permutations
+  ll mx = 0, ans = n * (n + 1) / 2;
+  // possible 1 permutations
+  for (ll x : conseq1scnt) {
+    ans -= x * (x + 1) / 2;
+    mx = max(x, mx);
   }
+
+  if (mx % 2)
+    ans += (mx / 2 + 1) * (mx / 2 + 1);
+  else
+    ans += mx / 2 * (mx / 2 + 1);
 
   cout << ans << endl;
 }
