@@ -227,10 +227,25 @@ void test() {
 
   dbg(prefa, prefc, indb);
   ll ans = 0;
+  char lasttaken = ' ';
   fori(1, indb.size() - 1) {
-    ll acnt = prefa[indb[i]] - prefa[indb[i - 1]];
-    ll ccnt = prefc[indb[i + 1]] - prefc[indb[i]];
-    ans += min(acnt, ccnt);
+    ll cnta = prefa[indb[i]] - prefa[indb[i - 1]];
+    ll cntc = prefc[indb[i + 1]] - prefc[indb[i]];
+    if (lasttaken == ' ') {
+      ans += min(cnta, cntc);
+      if (ans == cnta) {
+        // even if acnt and bcnt same take acnt as its on left
+        lasttaken = 'a';
+      } else {
+        lasttaken = 'c';
+      }
+    } else if (lasttaken == 'a') {
+      ans += cntc;
+      lasttaken = 'c';
+    } else {
+      ans += cnta;
+      lasttaken = 'a';
+    }
   }
 
   cout << ans << endl;

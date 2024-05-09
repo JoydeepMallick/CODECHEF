@@ -212,6 +212,22 @@ void test() {
   cin >> n;
   vll a(n);
   read(a);
+  ll ans = 0;
+  fori(0, n) {
+    if (a[i] == 1) {
+      // all powers allowed
+      ans += n;
+      continue;
+    }
+    ll Airaisedtoj = 1;
+    forj(0, n) {
+      Airaisedtoj *= a[i];
+      if (Airaisedtoj > 1e9)
+        break; // exceeded range
+      ans += (Airaisedtoj <= a[j]);
+    }
+  }
+  cout << ans << endl;
 }
 
 int main() {
