@@ -213,24 +213,32 @@ void test() {
   vll a(n);
   read(a);
 
-  vll tmp(n), pref(n + 1);
+  multiset<ll> tmp;
+
+  vector<ll> ans(
+      n + 1, 0); // k will always be odd hence only odd indices will have answer
+  for (auto ele : a) {
+    tmp.insert(ele);
+    if (tmp.size() % 2 == 0)
+      continue;
+
+    ll till = tmp.size() / 2;
+
+    ll val = 0;
+    auto itf = tmp.begin();
+    auto itb = tmp.rbegin();
+    while (till--) {
+      val += (*itb - *itf);
+      itb++;
+      itf++;
+    }
+    val += *itb;
+    ans[tmp.size()] = val;
+  }
   while (q--) {
     ll k;
     cin >> k;
-    fori(0, k) {
-      tmp[i] = a[i];
-      pref[i] = 0;
-    }
-    sort(tmp.begin(), tmp.begin()+k, greater<ll>());
-    dbg(tmp, pref);
-    // pref sum of sorted array
-    fori(1, k + 1) { pref[i] = pref[i - 1] + tmp[i - 1]; }
-
-    ll br = (k + 1) / 2;
-    ll tosub = pref[k] - pref[br];
-    ll toadd = pref[br];
-    ll ans = toadd - tosub;
-    cout << ans << " ";
+    cout << ans[k] << " ";
   }
   cout << endl;
 }

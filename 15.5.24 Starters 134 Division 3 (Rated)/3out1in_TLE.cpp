@@ -208,21 +208,31 @@ const ld PI = 3.141592653589793238462;
  * BELOW____________________________________*/
 
 void test() {
-  int x, y;
-  cin >> x >> y;
+  ll n, q;
+  cin >> n >> q;
+  vll a(n);
+  read(a);
 
-  int ans = 0;
-  if (x < 1000) {
-    ans = x + 1000;
-  } else {
-    ans = x * 2;
-  }
-  y--;
-  while (y--) {
-    ans = ans * 2;
-  }
+  vll tmp(n), pref(n + 1);
+  while (q--) {
+    ll k;
+    cin >> k;
+    fori(0, k) {
+      tmp[i] = a[i];
+      pref[i] = 0;
+    }
+    sort(tmp.begin(), tmp.begin() + k, greater<ll>());
+    dbg(tmp, pref);
+    // pref sum of sorted array
+    fori(1, k + 1) { pref[i] = pref[i - 1] + tmp[i - 1]; }
 
-  cout << ans << endl;
+    ll br = (k + 1) / 2;
+    ll tosub = pref[k] - pref[br];
+    ll toadd = pref[br];
+    ll ans = toadd - tosub;
+    cout << ans << " ";
+  }
+  cout << endl;
 }
 
 int main() {

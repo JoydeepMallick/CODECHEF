@@ -212,7 +212,7 @@ void test() {
   cin >> n;
 
   ll rem = n % 9;
-  ll ans = 45 * (n/9) + rem * (rem + 1) / 2;
+  ll ans = 45 * (n / 9) + rem * (rem + 1) / 2;
 
   cout << ans << endl;
 }
