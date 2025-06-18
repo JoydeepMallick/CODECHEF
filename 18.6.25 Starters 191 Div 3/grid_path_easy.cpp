@@ -134,14 +134,14 @@ void test(){
     }
     
     //s0 pref 0
-    int pref0[n] = {0};
+    int pref0[200005] = {0};
     pref0[0] = (s0[0] == '0');
     fori(1, n){
         pref0[i] = pref0[i-1] + (s0[0] == '0');
     }
     
     // s1 suf 0 
-    int suf0[n] = {0};
+    int suf0[200005] = {0};
     suf0[n-1] = (s1[n-1] == '0');
     for(int i = n-2; i >= 0; i--){
         suf0[i] = suf0[i+1] + (s1[i] == '0');
@@ -151,16 +151,22 @@ void test(){
     //parallely one 1 from least cost left goes to right extreme in s1
     int i = 0, j = n-1;
     int total1placed = 0;
+    int skipplaced = 0;
     int s0cost = 0, s1cost = 0;
     while(total1placed < (n+1)){
-        while(s0[i] != '1') i++;
-        s0cost += pref0[i];
-        i++;
-        total1placed++;
-        while(s1[j] != '1') j--;
-        s1cost += suf0[j];
-        j--;
-        total1placed++;
+        if(i < n){
+            while(s0[i] != '1') i++;
+            s0cost += pref0[i] - skipplaced;
+            i++;
+            total1placed++;
+        }
+        if(j >= 0){
+            while(s1[j] != '1') j--;
+            s1cost += suf0[j] - skipplaced;
+            j--;
+            total1placed++;
+        }
+        skipplaced++;
     }
     cout << s0cost + s1cost << endl;
     
