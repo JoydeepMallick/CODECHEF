@@ -131,14 +131,7 @@ void test(){
     int odd, even;
     cin >> odd >> even;
 
-    if(odd == 0) no;
-
-    else if(even == 0){
-      if(odd < 4 || odd%2 == 0) yes;
-      else no;
-    } 
-    
-    else if(odd < 4 || odd%2 == 0) yes;
+    if(odd > 0 && even%odd == 0) yes;
     
     else no;
       
@@ -167,5 +160,6 @@ int main(){
 #endif
   return 0;
 }
+
 
 
