@@ -133,8 +133,25 @@ void test(){
     vll a(n);
     read(a);
     
-    // i j k if of mixed parity just group similar parity together
-    // if all same parity test all permutations
+    // modulus can never be > Ai choosen, it can be <= Ai 
+    // So largest Ai can possibly be max(A) and min val = 0
+
+    sort(all(a));
+    //if Ai is not max(A) then Aj can be set to N.
+    //Hence Aj+Ak will always be > Ai 
+    //Hence for all such cases the best possible answer will be max(A - max(A)) i.e. 2nd largest
+    ll ans = a[n-2];
+    //when Ai is max(A) then we can need to check all possible combinations to find if we can find a max 
+    fori(0, n-1){
+      forj(i+1, n-1){
+        ll Ai = a[n-1];
+        ll Aj = a[i];
+        ll Ak = a[j];
+        ans = max(ans, Ai % (Aj + Ak));
+      }
+    }
+
+    cout << ans << endl;
 
 }
 
